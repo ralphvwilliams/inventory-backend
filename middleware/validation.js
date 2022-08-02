@@ -21,7 +21,7 @@ export const createUserValidation = (req, res, next) => {
 export const addProductsValidation = (req, res, next) => {
   const productSchema = Joi.object({
     // productId: Joi.number(),
-    name: Joi.number(),
+    name: Joi.string(),
     quantity: Joi.number(),
     unitPrice: Joi.number(),
     productStatus: Joi.string(),

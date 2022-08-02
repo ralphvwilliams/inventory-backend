@@ -81,3 +81,19 @@ export const getAllUsers = async (req, res) => {
     data: users,
   });
 };
+
+//LOGIN
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ email: email });
+  if (user.password != password) {
+    return res.status(200).send({
+      message: 'Incorrect details',
+      data: null,
+    });
+  }
+  return res.status(200).send({
+    message: 'User login successful',
+    data: user,
+  });
+};
