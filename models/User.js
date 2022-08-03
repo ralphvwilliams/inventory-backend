@@ -8,7 +8,7 @@ const userSchema = new Schema(
     email: { type: String, required: true },
     shopName: { type: String, required: true },
     password: { type: String, required: true },
-    // passwordConfirm: { type: String, required: true },
+    salt: { type: String },
     products: [],
   },
   { timestamps: true }

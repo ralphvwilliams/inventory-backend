@@ -1,14 +1,17 @@
+import { comparePassword, hashPassword } from '../auth/auth.js';
 import { User } from '../models/User.js';
 
 //POST REQUESTS
 //CREATE USER
 export const createUser = async (req, res) => {
   const { fullName, email, shopName, password } = req.body;
+  const { salt, hash } = await hashPassword(password);
   const user = await User.create({
     fullName: fullName,
     email,
     shopName,
-    password,
+    password: hash,
+    salt,
     products: [],
   });
 
@@ -86,9 +89,10 @@ export const getAllUsers = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email: email });
-  if (user.password != password) {
-    return res.status(200).send({
-      message: 'Incorrect details',
+  const valid = await comparePassword(password, user.password);
+  if (!valid) {
+    return res.status(401).send({
+      message: 'Wrong email or password',
       data: null,
     });
   }
