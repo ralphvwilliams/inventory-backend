@@ -1,5 +1,7 @@
 import { comparePassword, hashPassword } from '../auth/auth.js';
 import { User } from '../models/User.js';
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
 
 //POST REQUESTS
 //CREATE USER
@@ -23,9 +25,10 @@ export const createUser = async (req, res) => {
 
 //UPDATE USER
 export const updateUser = async (req, res) => {
-  const { id, ...updateObject } = req.body;
+  const { _id } = req.user;
+  const { ...updateObject } = req.body;
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, updateObject);
+    const updatedUser = await User.findByIdAndUpdate(_id, updateObject);
     return res.status(200).send({
       message: 'User updated',
       data: updatedUser,
@@ -41,9 +44,9 @@ export const updateUser = async (req, res) => {
 
 //DELETE USER
 export const deleteUser = async (req, res) => {
-  const { id } = req.body;
+  const { _id } = req.user;
   try {
-    const deletedUser = await User.findByIdAndDelete(id);
+    const deletedUser = await User.findByIdAndDelete(_id);
     return res.status(200).send({
       message: 'User deleted',
       data: deletedUser,
@@ -59,20 +62,11 @@ export const deleteUser = async (req, res) => {
 
 //GET SINGLE USER
 export const getUser = async (req, res) => {
-  const { id } = req.body;
-  try {
-    const user = await User.findById(id);
-    res.status(200).send({
-      message: 'User retreived',
-      data: user,
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(400).send({
-      message: 'Something went wrong',
-      data: error,
-    });
-  }
+  const { user } = req;
+  return res.status(200).send({
+    message: 'User retreived',
+    data: user,
+  });
 };
 
 //GET REQUESTS
@@ -87,17 +81,19 @@ export const getAllUsers = async (req, res) => {
 
 //LOGIN
 export const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email: email });
-  const valid = await comparePassword(password, user.password);
+  const { userEmail, userPassword } = req.body;
+  const user = await User.findOne({ email: userEmail });
+  const valid = await comparePassword(userPassword, user.password);
   if (!valid) {
     return res.status(401).send({
       message: 'Wrong email or password',
       data: null,
     });
   }
+  const { password, salt, ...userObject } = user;
+  const token = jwt.sign(userObject, process.env.JWT_SECRET);
   return res.status(200).send({
     message: 'User login successful',
-    data: user,
+    data: token,
   });
 };

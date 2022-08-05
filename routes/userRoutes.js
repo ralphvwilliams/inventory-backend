@@ -7,15 +7,15 @@ import {
   updateUser,
   loginUser,
 } from '../controllers/users.js';
-import { checkForUser } from '../middleware/user.js';
+import { checkForUser, getToken } from '../middleware/user.js';
 import { createUserValidation } from '../middleware/validation.js';
 
 const router = Router();
 
 router.post('/user/create', createUserValidation, createUser);
-router.post('/user/update', checkForUser, updateUser);
-router.post('/user/delete', checkForUser, deleteUser);
-router.post('/user', checkForUser, getUser);
+router.put('/user/update', getToken, updateUser);
+router.delete('/user/delete', getToken, deleteUser);
+router.get('/user', getToken, getUser);
 router.post('/login', loginUser);
 
 router.get('/users', getAllUsers);

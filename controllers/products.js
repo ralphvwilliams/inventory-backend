@@ -2,8 +2,8 @@ import { User } from '../models/User.js';
 
 //GET ALL PRODUCTS
 export const getAllUserProducts = async (req, res) => {
-  const { id } = req.body;
-  const user = await User.findById(id);
+  const { _id } = req.user;
+  const user = await User.findById(_id);
   const products = user.products;
   return res.status(200).send({
     message: 'User products retrieved',
@@ -13,11 +13,12 @@ export const getAllUserProducts = async (req, res) => {
 
 //ADD PRODUCT
 export const addProduct = async (req, res) => {
-  const { id, ...productObject } = req.body;
+  const { _id } = req.user;
+  const { ...productObject } = req.body;
   // const user = await User.findById(id);
   try {
     const addedProduct = await User.updateOne(
-      { _id: id },
+      { _id },
       { $push: { products: { productId: req.id, ...productObject } } }
     );
     // const product = user.product;
@@ -37,11 +38,12 @@ export const addProduct = async (req, res) => {
 
 //DELETE PRODUCT
 export const deleteProduct = async (req, res) => {
-  const { id, productId } = req.body;
+  const { _id } = req.user;
+  const { productId } = req.params;
   // const user = await User.findById(id);
   try {
     const deletedProduct = await User.updateMany(
-      { _id: id },
+      { _id },
       { $pull: { products: { productId: productId } } }
     );
     return res.status(201).send({
@@ -55,8 +57,9 @@ export const deleteProduct = async (req, res) => {
 
 //GET PRODUCT
 export const getProduct = async (req, res) => {
-  const { id, productId } = req.body;
-  const user = await User.findById(id);
+  const { _id } = req.user;
+  const { productId } = req.params;
+  const user = await User.findById(_id);
   const product = user.products.filter(
     (product) => product.productId == productId
   );
