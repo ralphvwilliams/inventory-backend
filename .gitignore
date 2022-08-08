@@ -1,2 +1,4 @@
 .env
 *.json
+app.log
+node_modules/
