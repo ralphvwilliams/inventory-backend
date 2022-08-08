@@ -21,10 +21,18 @@ export const createUserValidation = (req, res, next) => {
 export const addProductsValidation = (req, res, next) => {
   const productSchema = Joi.object({
     // productId: Joi.number(),
-    name: Joi.string(),
-    quantity: Joi.number(),
-    unitPrice: Joi.number(),
-    productStatus: Joi.string(),
-    category: Joi.string(),
+    name: Joi.string().required(),
+    quantity: Joi.number().required(),
+    unitPrice: Joi.number().required(),
+    productStatus: Joi.string().required(),
+    category: Joi.string().required(),
   });
+  const result = productSchema.validate(req.body);
+  if (result.error) {
+    res.status(400).send({
+      message: 'Something went wrong',
+      data: result.error.details[0].message,
+    });
+  }
+  next();
 };

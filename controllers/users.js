@@ -2,25 +2,42 @@ import { comparePassword, hashPassword } from '../auth/auth.js';
 import { User } from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import 'dotenv/config';
+import { responseHandler } from '../services/services.js';
 
 //POST REQUESTS
 //CREATE USER
 export const createUser = async (req, res) => {
-  const { fullName, email, shopName, password } = req.body;
-  const { salt, hash } = await hashPassword(password);
-  const user = await User.create({
-    fullName: fullName,
-    email,
-    shopName,
-    password: hash,
-    salt,
-    products: [],
-  });
-
-  return res.status(201).send({
-    message: 'User created',
-    data: user,
-  });
+  try {
+    const { fullName, email, shopName, password } = req.body;
+    const { salt, hash } = await hashPassword(password);
+    const user = await User.create({
+      fullName: fullName,
+      email,
+      shopName,
+      password: hash,
+      salt,
+      products: [],
+    });
+    return responseHandler(res, {
+      status: 201,
+      message: 'User created',
+      data: user,
+    });
+    // return res.status(201).send({
+    //   message: 'User created',
+    //   data: user,
+    // });
+  } catch (error) {
+    return responseHandler(
+      res,
+      { status: 401, message: 'Email already exists', data: null },
+      error
+    );
+    // return res.status(401).send({
+    //   message: 'Email already exists',
+    //   data: null,
+    // });
+  }
 };
 
 //UPDATE USER
@@ -37,7 +54,7 @@ export const updateUser = async (req, res) => {
     console.log(error);
     return res.status(400).send({
       message: 'Something went wrong',
-      data: error,
+      data: error.message,
     });
   }
 };
