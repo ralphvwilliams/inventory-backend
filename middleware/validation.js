@@ -36,3 +36,21 @@ export const addProductsValidation = (req, res, next) => {
   }
   next();
 };
+
+export const updateUserValidation = (req, res, next) => {
+  const updateSchema = Joi.object({
+    fullName: Joi.string(),
+    email: Joi.string().email(),
+    shopName: Joi.string(),
+    password: Joi.string().min(8),
+    // passwordConfirm: Joi.string().min(8).required(),
+  });
+  const result = updateSchema.validate(req.body);
+  if (result.error) {
+    res.status(400).send({
+      message: 'Something went wrong',
+      data: result.error.details[0].message,
+    });
+  }
+  next();
+};

@@ -7,7 +7,7 @@ const logger = winston.createLogger({
 });
 
 export const responseHandler = (res, resObj, error = null) => {
-  logger.error(error);
+  logger.error(error.message);
   return res.status(resObj.status).send({
     message: resObj.message,
     data: resObj.data,
