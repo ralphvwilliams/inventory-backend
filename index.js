@@ -3,7 +3,7 @@ import express from 'express';
 import 'dotenv/config';
 import routes from './routes/index.js';
 
-const app = express();
+export const app = express();
 const port = 8080;
 
 mongoose
