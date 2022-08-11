@@ -1,10 +1,9 @@
 import { faker } from '@faker-js/faker';
-import { options } from 'joi';
 
 export const createUserObj = {
   fullName: faker.name.fullName(),
   email: faker.internet.email(),
-  shopName: faker.company.name,
+  shopName: faker.company.name(),
   password: faker.random.alphaNumeric(8),
 };
 
@@ -13,9 +12,15 @@ export const addProdObj = {
   quantity: faker.random.numeric(),
   unitPrice: faker.random.numeric(),
   productStatus: faker.commerce.productAdjective(),
+  category: faker.commerce.productAdjective(),
 };
 
 export const loginObj = {
   email: faker.internet.email(),
   password: faker.random.alphaNumeric(8),
+};
+
+export const updateUserObj = {
+  fullName: faker.name.fullName(),
+  shopName: faker.company.name(),
 };

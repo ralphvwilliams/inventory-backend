@@ -5,9 +5,14 @@ import routes from './routes/index.js';
 
 export const app = express();
 const port = 8080;
+let DB_URL;
+
+process.env.NODE_ENV == 'development'
+  ? (DB_URL = process.env.DB_URL)
+  : (DB_URL = process.env.TEST_DB_URL);
 
 mongoose
-  .connect(process.env.DB_URL)
+  .connect(DB_URL)
   .then((res) => {
     console.log('DB Connected');
   })

@@ -24,6 +24,7 @@ export const createUser = async (req, res) => {
       data: user,
     });
   } catch (error) {
+    console.log(error.message);
     return responseHandler(
       res,
       { status: 401, message: 'Email already exists', data: null },
@@ -112,6 +113,7 @@ export const getAllUsers = async (req, res) => {
       data: users,
     });
   } catch (error) {
+    console.log(error);
     return responseHandler(
       res,
       {
@@ -149,6 +151,7 @@ export const loginUser = async (req, res) => {
       data: token,
     });
   } catch (error) {
+    console.log(error.message);
     return responseHandler(
       res,
       {

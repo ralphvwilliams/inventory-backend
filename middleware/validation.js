@@ -29,6 +29,7 @@ export const addProductsValidation = (req, res, next) => {
   });
   const result = productSchema.validate(req.body);
   if (result.error) {
+    console.log(result.error.details[0].message);
     res.status(400).send({
       message: 'Something went wrong',
       data: result.error.details[0].message,
